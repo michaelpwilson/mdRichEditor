@@ -22,7 +22,7 @@ function mdRichEditorDirective($compile, $sce, mdRichEditorToolbarService, $filt
       element.append($compile(mdRichEditorToolbarService.toolbar)(scope));
 	  
 		var contenteditable = '<div id="mdRichEditorEditable" style="position: relative; overflow: hidden;"><div class="md-padding"' +
-			'style="border-bottom: 2px solid rgb(63,81,181); max-height: 267px; overflow-y: scroll;"' +
+			'style="border-bottom: 3px solid rgb(255, 152, 0); max-height: 267px; overflow-y: scroll;"' +
 		'contenteditable ng-model="content"></div></div>';
 			
 	  element.append($compile(contenteditable)(scope));
@@ -47,9 +47,8 @@ function mdRichEditorDirective($compile, $sce, mdRichEditorToolbarService, $filt
 			var range    = selection.getRangeAt(0),
 			begin        = range.startOffset,
 			end          = range.endOffset;
-
-			
-			var parentNode   = selection.anchorNode.parentNode,
+	
+			var parentNode = selection.anchorNode.parentNode,
 			selectedNode = parentNode.innerHTML,
 			selectedText = selectedNode.substring(begin, end),
 			beginTag,
@@ -88,7 +87,7 @@ function mdRichEditorDirective($compile, $sce, mdRichEditorToolbarService, $filt
 								'</md-input-container>' +
 							'</md-list-item>' + 
 							'<md-list-item>' + 
-								'<md-button class="md-raised md-primary">Insert</md-button>' +
+								'<md-button type="submit" class="md-raised md-primary">Insert</md-button>' +
 							'</md-list-item>' + 
 						'</md-list>' +
 					'</form>' +
@@ -104,10 +103,17 @@ function mdRichEditorDirective($compile, $sce, mdRichEditorToolbarService, $filt
 					  text: selectedText
 				  };
 				  
+					function href(selectedNode, begin, end, endOf) {
+						return selectedNode.slice(0, begin) + '<a href="' + $scope.link.url + '">' + $scope.link.text + "</a>" + selectedNode.slice(end, endOf);
+					}
+				  
 				  $scope.insertLink = function() {
 					
-					console.log($scope.link);
-					  
+					parentNode.innerHTML = href(selectedNode, begin, end, selectedNode.length);
+					
+					console.log("hello");
+					$mdBottomSheet.hide();
+							  
 				  };
 				  
 			  },
