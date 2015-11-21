@@ -1,6 +1,6 @@
 angular
   .module('myApp', ['ngMaterial', 'mdRichEditor'])
-  .config(function(mdRichEditorProvider) {})
+  .config(function() {})
   .controller('MainController', ['$scope', '$mdSidenav', function($scope, $mdSidenav) {
 	  
       $scope.html = '<h2>mdRichEditor</h2>' +

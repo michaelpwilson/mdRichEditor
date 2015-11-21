@@ -1,5 +1,4 @@
-
-function mdRichEditorDirective($compile, $sce, mdRichEditor, mdRichEditorToolbarService, $filter) {
+function mdRichEditorDirective($compile, $sce, mdRichEditorToolbarService, $filter, $mdBottomSheet) {
   return {
     restrict: 'E',
     scope: {
@@ -7,10 +6,11 @@ function mdRichEditorDirective($compile, $sce, mdRichEditor, mdRichEditorToolbar
     },
     link: function(scope, element) {
 	  
-	  element.addClass("md-whiteframe-z1");
+	  element
+		.addClass("md-whiteframe-z1");
 		
       // initialize the toolbar
-      mdRichEditorToolbarService.init(angular.element('<md-toolbar><div class="md-toolbar-tools"></md-toolbar>'), mdRichEditorToolbarData.length);
+      mdRichEditorToolbarService.init(angular.element('<md-toolbar  md-theme="richeditor-dark"><div class="md-toolbar-tools"></md-toolbar>'), mdRichEditorToolbarData.length);
       
       angular.forEach(mdRichEditorToolbarData, function(menu, index) {
       
@@ -21,57 +21,107 @@ function mdRichEditorDirective($compile, $sce, mdRichEditor, mdRichEditorToolbar
       // compile and append!
       element.append($compile(mdRichEditorToolbarService.toolbar)(scope));
 	  
-	        var contenteditable = '<div id="mdRichEditorEditable" class="md-padding"' +
-			'style="overflow-y: scroll; min-height: 450px; max-height: 450px; border-bottom: 2px solid rgb(63,81,181);"' +
-			'contenteditable ng-model="content"></div>';
+		var contenteditable = '<div id="mdRichEditorEditable" style="position: relative; overflow: hidden;"><div class="md-padding"' +
+			'style="border-bottom: 2px solid rgb(63,81,181); max-height: 267px; overflow-y: scroll;"' +
+		'contenteditable ng-model="content"></div></div>';
 			
 	  element.append($compile(contenteditable)(scope));
 	  
-     /* var editor = '<md-input-container class="md-block">'
-        + '<textarea id="mdRichEditorText" ng-model="content" md-maxlength="150"></textarea>'
-      + '</md-input-container>';
-      
-      element.append($compile(editor)(scope));*/
-	  
 	  function wrap(selectedNode, beginTag, begin, endTag, end, endOf, selectedText) {
+		 //console.log(selectedNode, beginTag, begin, endTag, end, endOf, selectedText);
+		 console.log(end, endOf, selectedNode);
 		 return selectedNode.slice(0, begin) + beginTag + selectedText + endTag + selectedNode.slice(end, endOf);
 	  }
       
-      scope.action = function(tool, index) {
+      scope.action = function(tool, index, $event) {
 		  
 		// get the start and end of the selection
         var selection    = document.getSelection(),
-			range        = selection.getRangeAt(0),
-			// the beginning of the selection
-			begin        = range.startOffset,
-			end          = range.endOffset,
 			toolActions  = $filter('filter')(mdRichEditorToolbarData[index], { name: tool }, true)[0],
 			plainHTML    = angular.element(element).children()[1].innerHTML,
-			parentNode   = selection.anchorNode.parentNode,
+			bottomSheetTemplate;
+
+		if(selection) {
+			
+			// get the range of selection
+			var range    = selection.getRangeAt(0),
+			begin        = range.startOffset,
+			end          = range.endOffset;
+
+			
+			var parentNode   = selection.anchorNode.parentNode,
 			selectedNode = parentNode.innerHTML,
 			selectedText = selectedNode.substring(begin, end),
 			beginTag,
 			endTag;
 			
-		console.log(toolActions);
-			
+		}	
+		
 		if(toolActions.hasOwnProperty('tags')) {
 			beginTag     = toolActions.tags[0],
 			endTag       = toolActions.tags[1];
 				
 			selection.anchorNode.parentNode.innerHTML = wrap(selectedNode, beginTag, begin, endTag, end, selectedNode.length, selectedText);
 			
-		} if(toolActions.hasOwnProperty('style')) {
+			if(toolActions.hasOwnProperty('style')) {
 			
-			parentNode.style += toolActions.style;
+				parentNode.style += toolActions.style;
+			
+			}
+			
+		}  else if(toolActions.name === "insertLink") {
+			
+			bottomSheetTemplate = '<md-bottom-sheet class="md-list" style="padding: 0;">' +
+			'<md-content md-theme="richeditor-dark" style="padding: 8px 16px 88px;">' + 
+					'<form ng-submit="insertLink()">' +
+						'<md-list>' +
+							'<md-list-item>' + 
+								'<md-input-container>' +
+									'<label>Link URL</label>' +
+									'<input ng-model="link.url">' +
+								'</md-input-container>' +
+							'</md-list-item>' + 
+							'<md-list-item>' + 
+								'<md-input-container>' +
+									'<label>Link Text</label>' +
+									'<input ng-model="link.text">' +
+								'</md-input-container>' +
+							'</md-list-item>' + 
+							'<md-list-item>' + 
+								'<md-button class="md-raised md-primary">Insert</md-button>' +
+							'</md-list-item>' + 
+						'</md-list>' +
+					'</form>' +
+				'</md-content>' +
+			'</md-bottom-sheet>';
+			
+			$mdBottomSheet.show({
+			  template: bottomSheetTemplate,
+			  controller: function($scope) {
+				  
+				  $scope.link = {
+					  url: "",
+					  text: selectedText
+				  };
+				  
+				  $scope.insertLink = function() {
+					
+					console.log($scope.link);
+					  
+				  };
+				  
+			  },
+			  parent: angular.element(document.getElementById("mdRichEditorEditable")),
+			  targetEvent: $event
+			});
 			
 		}
 			
-			if(parent.id == "mdRichEditorEditable") {
-				scope.content = parent.innerHTML;
-			} else if(typeof parent.parentNode !== "undefined" && parent.parentNode.id == "mdRichEditorEditable") {
-				scope.content = parent.parentNode.innerHTML;
-			}
+		if(parent.id == "mdRichEditorEditable") {
+			scope.content = parent.innerHTML;
+		} else if(typeof parent.parentNode !== "undefined" && parent.parentNode.id == "mdRichEditorEditable") {
+			scope.content = parent.parentNode.innerHTML;
+		}
 			
       }
     }

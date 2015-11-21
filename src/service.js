@@ -5,14 +5,14 @@ function mdRichEditorTbService() {
 		  this.toolbar = toolbelt;
 		},
 		// adds a menu to the menuBar
-		add: function(item, index) {
+		add: function(item, menuindex) {
 			
 			if(!item) { throw new Error(); }
 			
-			angular.forEach(item, function(tool, index) {
+			angular.forEach(item, function(tool, toolindex) {
 			   var button;
 			   
-			   button = "<md-button class=\"md-icon-button\" ng-click=\"action('" + tool.name + "', " + index + ")\">" +
+			   button = "<md-button class=\"md-icon-button\" ng-click=\"action('" + tool.name + "', " + menuindex + ", $event)\">" +
 				'<md-tooltip md-direction="bottom">' + tool.name + '</md-tooltip>' +
 				"<i class=\"md-icon " + tool.icon + "\"></i>" +
 			   '</md-button>';
