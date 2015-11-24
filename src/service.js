@@ -11,8 +11,14 @@ function mdRichEditorTbService() {
 			
 			angular.forEach(item, function(tool, toolindex) {
 			   var button;
-			   
-			   button = "<md-button class=\"md-icon-button\" ng-click=\"action('" + tool.name + "', " + menuindex + ", $event)\">" +
+			
+			   if(!tool.hasOwnProperty("mobile")) {
+				   button = '<md-button class="md-icon-button"';
+			   } else if(tool.mobile === false) {
+				   button = '<md-button class="md-icon-button hide-sm"';
+			   }
+			     
+				button += "ng-click=\"action('" + tool.name + "', " + menuindex + ", $event)\">" +
 				'<md-tooltip md-direction="bottom">' + tool.name + '</md-tooltip>' +
 				"<i class=\"md-icon " + tool.icon + "\"></i>" +
 			   '</md-button>';

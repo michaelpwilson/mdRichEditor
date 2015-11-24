@@ -29,38 +29,43 @@ var mdRichEditorToolbarData = [
 			name: "quote",
 			type: "icon",
 			icon: "fa fa-quote-left",
-			tags: ["<blockquote><pre>", "</pre></blockquote>"]
+			tags: ["<blockquote><pre>", "</pre></blockquote>"],
+			mobile: false
 		  }, {
 			name: "ul",
 			type: "icon",
 			icon: "fa fa-list-ul",
-			tags: ["<ul>", "</ul>"]
+			tags: ["<ul><li>", "</li></ul>"]
 		  }, {
 			name: "ol",
 			type: "icon",
 			icon: "fa fa-list-ol",
-			tags: ["<ol>", "</ol>"]
+			tags: ["<ol><li>", "</li></ol>"]
 		  }],
 		  [{
 			name: "alignLeft",
 			type: "icon",
 			icon: "fa fa-align-left",
-			style: "text-align: left;"
+			style: "text-align: left;",
+			mobile: false
 		  }, {
 			name: "alignCenter",
 			type: "icon",
 			icon: "fa fa-align-center",
-			style: "text-align: center;"
+			style: "text-align: center;",
+			mobile: false
 		  }, {
 			name: "alignRight",
 			type: "icon",
 			icon: "fa fa-align-right",
-			style: "text-align: right;"
+			style: "text-align: right;",
+			mobile: false
 		  }, {
 			name: "alignJustify",
 			type: "icon",
 			icon: "fa fa-align-justify",
-			style: "text-align: justify;"
+			style: "text-align: justify;",
+			mobile: false
 		  }],
 		  [{
 			name: "insertImage",
