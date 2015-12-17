@@ -3,44 +3,44 @@ var mdRichEditorToolbarData = [
 			name: "bold",
 			type: "icon",
 			icon: "fa fa-bold",
-			tags: ["<b>", "</b>"]
+			 tag: "b"
 		  }, {
 			name: "italtic",
 			type: "icon",
 			icon: "fa fa-italic",
-			tags: ["<i>", "</i>"]
+			tag: "i"
 		  }, {
 			name: "underline",
 			type: "icon",
 			icon: "fa fa-underline",
-			tags: ["<u>", "</u>"]
+			tag: "u"
 		  }, {
 			name: "header",
 			type: "icon",
 			icon: "fa fa-header",
-			tags: ["<h2>", "</h2>"]
+			tag: "h2"
 		  }, {
 			name: "p",
 			type: "icon",
 			icon: "fa fa-paragraph",
-			tags: ["<p>", "</p>"]
+			tag: "p"
 			
 		  }, {
 			name: "quote",
 			type: "icon",
 			icon: "fa fa-quote-left",
-			tags: ["<blockquote><pre>", "</pre></blockquote>"],
+			tag: "blockquote",
 			mobile: false
 		  }, {
 			name: "ul",
 			type: "icon",
 			icon: "fa fa-list-ul",
-			tags: ["<ul><li>", "</li></ul>"]
+			tag: "ul"
 		  }, {
 			name: "ol",
 			type: "icon",
 			icon: "fa fa-list-ol",
-			tags: ["<ol><li>", "</li></ol>"]
+			tag: "ol"
 		  }],
 		  [{
 			name: "alignLeft",
